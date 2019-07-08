@@ -19,5 +19,13 @@ class StatusRepository extends BaseRepository
   
         return $status;
     }
+
+     public function updateStatus($id, $newStatus){
+    	$status = Status::find($id);
+
+		$status[0]->status = $newStatus;
+
+		$status[0]->save();
+    }
     
 }

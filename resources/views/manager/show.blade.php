@@ -33,7 +33,9 @@
                     <th>#</th>
                     <th>Titulo</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +44,10 @@
                     <td>{{$ficha['id']}}</td>
                     <td>{{$ficha['titulo']}}</td>
                     <td><span class="label {{$ficha['label']}}">{{$ficha['status']}}</span></td>
-                    <td><a href="{{url($ficha['link'] . '/' . $ficha['id'])}}" class="btn btn-sm manage">{{$ficha['action']}}</a></td>
+                    @foreach($ficha['action'] as $a)
+                        <td><a href="{{url($a['link'] . '/' . $ficha['id'])}}" class="btn btn-sm manage">   {{$a['action']}}
+                        </a></td>
+                    @endforeach
                 </tr>
                 @endforeach
             </tbody>

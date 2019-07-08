@@ -39,7 +39,7 @@ class FichaController extends Controller
     }
 
 	public function index(){
-
+         return view('user.home');
 	}
 
     public function getCreate()
@@ -88,7 +88,7 @@ class FichaController extends Controller
 
         $this->statusUpdate($ficha->id, 'Solicitado');
 
-        //return redirect()->route('user.home');
+        return redirect()->route('user.home');
 
     }
 
@@ -114,16 +114,16 @@ class FichaController extends Controller
             if($status == "Solicitado"){
                 $dataStatus = 'inactive';
                 $label = 'label-warning';
-                $action = 'Download';
-                $link = "user/ficha/download";
+                $action = '';
+                $link = "";
             } else if($status == "Deferido"){
                 $dataStatus = 'active';
-                $label = 'label-sucess';
+                $label = 'label-success';
                 $action = 'Download';
                 $link = "user/ficha/download";
             } else if($status == "Indeferido"){
                 $dataStatus = 'expired';
-                $label = 'label-denger';
+                $label = 'label-danger';
                 $action = 'Update';
                 $link = "user/ficha/update";
             }  
@@ -187,7 +187,25 @@ class FichaController extends Controller
 
         $this->generatePdf($text);
 
+        $this->baixar();
+
         return redirect()->route('user.ficha.show');
+    }
+
+    public function baixar (){
+        $arquivo = 'generatePdf.pdf';
+
+        $caminho_download = "pdf/out/" . $arquivo;
+    
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="'.basename($arquivo).'"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($caminho_download));
+        readfile($caminho_download);
+        exit;
     }
 
     public function statusUpdate($id, $status)

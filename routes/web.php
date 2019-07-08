@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'User\HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 
 Route::group(['prefix' => 'manager'], function () {
 	Route::get('login', 'Manager\Auth\LoginController@showLoginForm')->name('manager.login');
@@ -23,12 +23,12 @@ Route::group(['prefix' => 'manager'], function () {
 	Route::get('/', 'Manager\HomeController@index')->name('manager.home');
 
 	Route::group(['prefix' => 'ficha'], function () {
-		Route::get('/show', 'manager\FichaController@getShow')->name('manager.ficha.show');
-		Route::get('/validar/{id}', 'manager\FichaController@getValidar')->name('manager.ficha.validar');
-		Route::post('/validar', 'manager\FichaController@postValidar')->name('manager.ficha.validar');
-		Route::get('/indeferir/{id}', 'manager\FichaController@getIndeferir')->name('manager.ficha.indeferir');
-		Route::post('/indeferir', 'manager\FichaController@postIndeferir')->name('manager.ficha.indeferir');
-		Route::get('/download/{id}', 'manager\FichaController@download')->name('manager.ficha.download');
+		Route::get('/show', 'Manager\FichaController@show')->name('manager.ficha.show');
+		Route::get('/validar/{id}', 'Manager\FichaController@getValidar')->name('manager.ficha.validar');
+		Route::post('/validar', 'Manager\FichaController@postValidar')->name('manager.ficha.validar');
+		Route::get('/indeferir/{id}', 'Manager\FichaController@getIndeferir')->name('manager.ficha.indeferir');
+		Route::post('/indeferir', 'Manager\FichaController@postIndeferir')->name('manager.ficha.indeferir');
+		Route::get('/download/{id}', 'Manager\FichaController@download')->name('manager.ficha.download');
 	});
 });
 

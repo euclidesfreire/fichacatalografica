@@ -23,21 +23,21 @@ abstract class BaseRepository
         return $this->model->create($data);
     }
 
-    // public function update(array $data, $id, $attribute = null)
-    // {
-    //     if (is_null($attribute)) {
-    //         $attribute = $this->model->getKeyName();
-    //     }
-    //     $updated = 0;
-    //     $collection = $this->model->where($attribute, '=', $id)->get();
-    //     if ($collection) {
-    //         foreach ($collection as $obj) {
-    //             $obj->fill($data)->save();
-    //         }
-    //         $updated = $collection->count();
-    //     }
-    //     return $updated;
-    // }
+    public function update(array $data, $id, $attribute = null)
+    {
+        if (is_null($attribute)) {
+            $attribute = $this->model->getKeyName();
+        }
+        $updated = 0;
+        $collection = $this->model->where($attribute, '=', $id)->get();
+        if ($collection) {
+            foreach ($collection as $obj) {
+                $obj->fill($data)->save();
+            }
+            $updated = $collection->count();
+        }
+        return $updated;
+    }
 
     public function delete($id)
     {

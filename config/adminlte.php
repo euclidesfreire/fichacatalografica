@@ -116,13 +116,19 @@ return [
         ],
         [
             'text'        => 'Ficha',
-            'url'         => '/',
+            'url'         => '/user/ficha',
             'icon'        => 'file',
             'label_color' => 'success',
         ],
         [
             'text'        => 'Minhas Solicitações',
             'url'         => '/user/ficha/show',
+            'icon'        => 'file',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Solicitações',
+            'url'         => '/manager/ficha/show',
             'icon'        => 'file',
             'label_color' => 'success',
         ],
