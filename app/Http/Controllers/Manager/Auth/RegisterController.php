@@ -63,11 +63,18 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        $manager = $this->create($request->all());
+        $data = array(
+            'nome' => $request->input('nome'),
+            'cpf' => $request->input('cpf'),
+            'password'=> $request->input('password'),
+        );
 
-        $this->guard()->login($manager);
+        $manager = $this->managerRepository->create($data);
 
-        return redirect()->route('manager.home');;
+        if($manager)
+            $this->guard()->login($manager);
+
+        return redirect()->route('manager.home');
     }
 
     /**
@@ -96,7 +103,7 @@ class RegisterController extends Controller
         return Manager::create([
             'nome' => $data['nome'],
             'cpf' => $data['cpf'],
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'],
         ]);
     }
 

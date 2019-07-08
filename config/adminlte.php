@@ -120,16 +120,11 @@ return [
             'icon'        => 'file',
             'label_color' => 'success',
         ],
-        'ACCOUNT SETTINGS',
         [
-            'text' => 'Profile',
-            'url'  => '',
-            'icon' => 'user',
-        ],
-        [
-            'text' => 'Change Password',
-            'url'  => '',
-            'icon' => 'lock',
+            'text'        => 'Minhas Solicitações',
+            'url'         => '/user/ficha/show',
+            'icon'        => 'file',
+            'label_color' => 'success',
         ],
     ],
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\FichaRepository;
 use App\Repositories\CduRepository;
 use App\Repositories\StatusRepository;
@@ -50,8 +51,12 @@ class FichaController extends Controller
     {
         $idUser = Auth::user()->id;
 
+        $assunto4 = ($request->input('assunto4') !== NULL) ? $request->input('assunto4')  : "";
+        $assunto5 = ($request->input('assunto5') !== NULL) ? $request->input('assunto5')  : "";
+
+
         $dataFicha = array(
-            'id_user' => $idUser:
+            'id_user' => $idUser,
             'nome' => $request->input('autor_nome'),
             'sobrenome' => $request->input('autor_sobrenome'),
             'titulo' => $request->input('titulo'),
@@ -67,8 +72,8 @@ class FichaController extends Controller
             'assunto1' => $request->input('assunto1'),
             'assunto2' => $request->input('assunto2'),
             'assunto3' => $request->input('assunto3'),
-            'assunto4' => $request->input('assunto4'),
-            'assunto5' => $request->input('assunto5'),
+            'assunto4' => $assunto4,
+            'assunto5' => $assunto5,
         );
 
         // foreach ($dataFicha as &$data) {
@@ -79,12 +84,64 @@ class FichaController extends Controller
 
         // $this->generatePdf($text);
 
+        $ficha = $this->fichaRepository->create($dataFicha);
+
+        $this->statusUpdate($ficha->id, 'Solicitado');
+
+        //return redirect()->route('user.home');
 
     }
 
     public function show()
     {
+        $idUser = Auth::user()->id;
 
+        $fichas = $this->fichaRepository->getFichaUser($idUser);
+
+        $fichasArray = array();
+
+        foreach ($fichas as $ficha) {
+
+            $dataStatus = $label = $action = $link = $status = "";
+
+            $statusVar = $this->statusRepository->getStatus($ficha->id);
+
+
+           foreach ($statusVar as $value) {
+            
+                $status = $value->status;
+
+            if($status == "Solicitado"){
+                $dataStatus = 'inactive';
+                $label = 'label-warning';
+                $action = 'Download';
+                $link = "user/ficha/download";
+            } else if($status == "Deferido"){
+                $dataStatus = 'active';
+                $label = 'label-sucess';
+                $action = 'Download';
+                $link = "user/ficha/download";
+            } else if($status == "Indeferido"){
+                $dataStatus = 'expired';
+                $label = 'label-denger';
+                $action = 'Update';
+                $link = "user/ficha/update";
+            }  
+
+            }     
+
+            $fichasArray[] = [
+                'id' => $ficha->id,
+                'titulo' => $ficha->titulo,
+                'status' => $status,
+                'datastatus' => $dataStatus,
+                'label' => $label,
+                'action' => $action,
+                'link' => $link,
+            ];
+        }
+
+        return view('user.show', ['fichas' => $fichasArray]);
     }
 
     public function getUpdate()
@@ -98,30 +155,68 @@ class FichaController extends Controller
     }
 
 
-    public function download()
+    public function download($id)
     {
+        $fichas = $this->fichaRepository->getFicha($id);
 
+        $dataFicha;
+
+        foreach ($fichas as $ficha) {
+            $dataFicha = array(
+                'nome' => $ficha->nome,
+                'sobrenome' => $ficha->sobrenome,
+                'titulo' => $ficha->titulo,
+                'subtitulo' => $ficha->subtitulo,
+                'universidade' => $ficha->universidade,
+                'cidade' => $ficha->cidade,
+                'ano' => $ficha->ano,
+                'nivel' => $ficha->nivel,
+                'departamento' => $ficha->departamento,
+                'curso' => $ficha->curso,
+                'nome_orientador' => $ficha->nome_orientador,
+                'sobrenome_orientador' => $ficha->sobrenome_orientador,
+                'assunto1' => $ficha->assunto1,
+                'assunto2' => $ficha->assunto2,
+                'assunto3' => $ficha->assunto3,
+                'assunto4' => $ficha->assunto4,
+                'assunto5' => $ficha->assunto5,
+            );
+        }
+
+        $text = $this->assemble($dataFicha);
+
+        $this->generatePdf($text);
+
+        return redirect()->route('user.ficha.show');
     }
 
-
+    public function statusUpdate($id, $status)
+    {
+        $data = array(
+            'id_ficha' => $id,
+            'status' => $status,
+        );
+    
+        $this->statusRepository->create($data);
+    }
     public function assemble($dataFicha)
     {
-    	$text = $dataFicha['autor_sobrenome'] . ", "
-    	. $dataFicha['autor_nome'] . "\n"
+    	$text = $dataFicha['sobrenome'] . ", "
+    	. $dataFicha['nome'] . "\n"
 		. "        " . $dataFicha['titulo'] . " / "
-		. $dataFicha['autor_nome'] . " "
-		. $dataFicha['autor_sobrenome'] . "." 
+		. $dataFicha['nome'] . " "
+		. $dataFicha['sobrenome'] . "." 
 		. " - " . $dataFicha['cidade'] . ","
 		. $dataFicha['ano'] . ". \n\n"
-		. "        " . $dataFicha['nivel_trabalho'] . " - "
+		. "        " . $dataFicha['nivel'] . " - "
 		. $dataFicha['curso'] . ", "
 		. $dataFicha['universidade'] . ","
 		. $dataFicha['ano'] . "\n\n";
 
-		if (!empty($dataFicha['orientador_nome'])){
+		if (!empty($dataFicha['nome_orientador'])){
 			$text .= "        Orientador(a): " 
-			. $dataFicha['orientador_nome'] . " " 
-			. $dataFicha['orientador_sobrenome'] . "\n\n";
+			. $dataFicha['nome_orientador'] . " " 
+			. $dataFicha['sobrenome_orientador'] . "\n\n";
 		}
 
 		$text .= "        1." . $dataFicha['assunto1']; 

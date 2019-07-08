@@ -48,7 +48,7 @@ class LoginController extends Controller
         if ($manager) {
             Auth::guard('manager')->login($manager);
             // Authentication passed...
-            return redirect()->intended('/manager');
+            return redirect()->route('manager.home');
         }
 
         // $credentials = $request->only('cpf', 'password');

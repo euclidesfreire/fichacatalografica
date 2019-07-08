@@ -69,9 +69,10 @@ class RegisterController extends Controller
 
         $user = $this->userRepository->create($data);
 
-        $this->guard()->login($user);
+        if($user)
+            $this->guard()->login($user);
 
-        return redirect()->route('user.home');;
+        return redirect()->route('user.home');
     }
 
     /**

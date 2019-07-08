@@ -16,7 +16,6 @@ class CreateStatusTable extends Migration
         Schema::create('status', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('id_ficha')->unsigned();
-            $table->bigInteger('id_manager')->unsigned();
             $table->string('status');
             $table->rememberToken();
             $table->timestamps();
@@ -24,7 +23,6 @@ class CreateStatusTable extends Migration
 
         Schema::table('status', function (Blueprint $table) {
             $table->foreign('id_ficha')->references('id')->on('fichas');
-            $table->foreign('id_manager')->references('id')->on('managers');
         });
     }
 

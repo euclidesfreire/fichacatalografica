@@ -20,7 +20,7 @@ class ManagerRepository extends BaseRepository
 
     public function attemp($credentials)
     {
-        $password = Hash::make($credentials['password']); 
+        $password = $credentials['password']; 
 
     	$user = $this->model->where('cpf', $credentials['cpf'])
         		->where('password', $password)->first();

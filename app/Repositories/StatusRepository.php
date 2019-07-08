@@ -13,9 +13,11 @@ class StatusRepository extends BaseRepository
         $this->model = $status;
     }
     
-    public function getStatus() 
+    public function getStatus($id_ficha) 
     {
-
+    	$status = $this->model->where('id_ficha', $id_ficha)->get();
+  
+        return $status;
     }
     
 }

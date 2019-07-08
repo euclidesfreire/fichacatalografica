@@ -13,9 +13,18 @@ class FichaRepository extends BaseRepository
         $this->model = $ficha;
     }
     
-    public function getFicha() 
+    public function getFicha($id) 
     {
+    	$fichas = $this->model->where('id', $id)->get();
+  
+        return $fichas;
+    }
 
+    public function getFichaUser($id_user) 
+    {
+    	$fichas = $this->model->where('id_user', $id_user)->get();
+  
+        return $fichas;
     }
     
 }
