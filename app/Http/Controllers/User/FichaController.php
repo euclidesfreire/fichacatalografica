@@ -163,6 +163,7 @@ class FichaController extends Controller
 
         foreach ($fichas as $ficha) {
             $dataFicha = array(
+                'id' => $ficha->id,
                 'nome' => $ficha->nome,
                 'sobrenome' => $ficha->sobrenome,
                 'titulo' => $ficha->titulo,
