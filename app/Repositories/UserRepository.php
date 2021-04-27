@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Repositories\BaseRepository;
+use App\App\Core\Repository\BaseRepository;
 use App\Models\User;
 use Auth;
 
